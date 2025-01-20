@@ -1,22 +1,19 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { register } = useContext(AuthContext);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login(email);
-    navigate("/");
+    register(email, password);
   };
 
   return (
     <div>
-      <h2>Login</h2>
+      <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email:</label>
@@ -34,10 +31,10 @@ const LoginPage: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
     </div>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

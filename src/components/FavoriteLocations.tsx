@@ -1,20 +1,28 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
-const FavoriteLocations: React.FC = () => {
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [newLocation, setNewLocation] = useState("");
-  const { user } = useContext(AuthContext);
+interface FavoriteLocationsProps {
+  onLocationClick: (location: string) => void;
+}
 
-  const addFavorite = () => {
-    if (newLocation.trim() && !favorites.includes(newLocation)) {
-      setFavorites([...favorites, newLocation]);
+const FavoriteLocations: React.FC<FavoriteLocationsProps> = ({
+  onLocationClick,
+}) => {
+  const [newLocation, setNewLocation] = useState("");
+  const { user, favorites, addFavorite, removeFavorite } =
+    useContext(AuthContext);
+
+  if (!user) {
+    return null; // Ensure the component does not render if the user is not logged in
+  }
+
+  const handleAddFavorite = () => {
+    if (newLocation.trim()) {
+      const formattedLocation =
+        newLocation.charAt(0).toUpperCase() + newLocation.slice(1);
+      addFavorite(formattedLocation);
       setNewLocation("");
     }
-  };
-
-  const removeFavorite = (location: string) => {
-    setFavorites(favorites.filter((fav) => fav !== location));
   };
 
   return (
@@ -26,11 +34,16 @@ const FavoriteLocations: React.FC = () => {
         onChange={(e) => setNewLocation(e.target.value)}
         placeholder="Add new location"
       />
-      <button onClick={addFavorite}>Add</button>
+      <button onClick={handleAddFavorite}>Add</button>
       <ul>
         {favorites.map((location) => (
           <li key={location}>
-            {location}{" "}
+            <span
+              onClick={() => onLocationClick(location)}
+              style={{ cursor: "pointer", textDecoration: "underline" }}
+            >
+              {location}
+            </span>{" "}
             <button onClick={() => removeFavorite(location)}>Remove</button>
           </li>
         ))}
