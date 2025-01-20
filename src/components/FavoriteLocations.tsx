@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import "./FavoriteLocations.css"; // Import the CSS file
 
 interface FavoriteLocationsProps {
   onLocationClick: (location: string) => void;
@@ -9,7 +10,8 @@ const FavoriteLocations: React.FC<FavoriteLocationsProps> = ({
   onLocationClick,
 }) => {
   const [newLocation, setNewLocation] = useState("");
-  const { user, favorites, addFavorite, removeFavorite } = useAuth();
+  const { user, favorites, addFavorite, removeFavorite } =
+    useContext(AuthContext);
 
   if (!user) {
     return null; // Ensure the component does not render if the user is not logged in
@@ -27,23 +29,33 @@ const FavoriteLocations: React.FC<FavoriteLocationsProps> = ({
   return (
     <div>
       <h3>{user}'s Favorite Locations</h3>
-      <input
-        type="text"
-        value={newLocation}
-        onChange={(e) => setNewLocation(e.target.value)}
-        placeholder="Add new location"
-      />
-      <button onClick={handleAddFavorite}>Add</button>
-      <ul>
+      <div className="favorite-form">
+        <input
+          type="text"
+          value={newLocation}
+          onChange={(e) => setNewLocation(e.target.value)}
+          placeholder="Add new location"
+          className="favorite-input"
+        />
+        <button onClick={handleAddFavorite} className="favorite-button">
+          Add
+        </button>
+      </div>
+      <ul className="favorite-list">
         {favorites.map((location) => (
-          <li key={location}>
+          <li key={location} className="favorite-item">
             <span
               onClick={() => onLocationClick(location)}
-              style={{ cursor: "pointer", textDecoration: "underline" }}
+              className="favorite-location"
             >
               {location}
-            </span>{" "}
-            <button onClick={() => removeFavorite(location)}>Remove</button>
+            </span>
+            <button
+              onClick={() => removeFavorite(location)}
+              className="remove-button"
+            >
+              Remove
+            </button>
           </li>
         ))}
       </ul>

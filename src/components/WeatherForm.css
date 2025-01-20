@@ -1,0 +1,33 @@
+.weather-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Add some space between input and button */
+  width: 100%;
+  max-width: 600px;
+  padding: 0 20px; /* Add padding for mobile devices */
+  box-sizing: border-box; /* Ensure padding is included in the element's total width and height */
+}
+
+.weather-input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px; /* Rounded corners for the left side */
+  flex-grow: 1; /* Allow the input to grow */
+}
+
+.weather-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 0 4px 4px 0; /* Rounded corners for the right side */
+  background-color: #6a11cb; /* Normal state background color */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.weather-button:hover {
+  background-color: #2575fc; /* Hover state background color */
+}
