@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./WeatherForm.css"; // Import the CSS file
+import "./WeatherForm.css";
 
 interface WeatherFormProps {
   onSearch: (location: string) => void;
