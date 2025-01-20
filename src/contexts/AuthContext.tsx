@@ -1,4 +1,10 @@
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
 
 interface AuthContextType {
   user: string | null;
@@ -11,15 +17,40 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const SESSION_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const loginTime = localStorage.getItem("loginTime");
+
+    if (storedUser && loginTime) {
+      const currentTime = new Date().getTime();
+      const elapsedTime = currentTime - parseInt(loginTime, 10);
+
+      if (elapsedTime < SESSION_DURATION) {
+        setUser(storedUser);
+        const savedFavorites = JSON.parse(
+          localStorage.getItem(storedUser) || "[]"
+        );
+        setFavorites(savedFavorites);
+      } else {
+        localStorage.removeItem("user");
+        localStorage.removeItem("loginTime");
+      }
+    }
+  }, []);
+
   const login = (username: string) => {
+    const currentTime = new Date().getTime();
     setUser(username);
-    // Load favorites from localStorage or API
+    localStorage.setItem("user", username);
+    localStorage.setItem("loginTime", currentTime.toString());
     const savedFavorites = JSON.parse(localStorage.getItem(username) || "[]");
     setFavorites(savedFavorites);
   };
@@ -27,6 +58,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const logout = () => {
     setUser(null);
     setFavorites([]);
+    localStorage.removeItem("user");
+    localStorage.removeItem("loginTime");
   };
 
   const addFavorite = (location: string) => {

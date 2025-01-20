@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import WeatherForm from "../components/WeatherForm";
 import WeatherDisplay from "../components/WeatherDisplay";
 import FavoriteLocations from "../components/FavoriteLocations";
-import { AuthContext } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import { fetchWeather } from "../services/weatherService";
 import { Link } from "react-router-dom";
 
 const HomePage: React.FC = () => {
-  const [weatherData, setWeatherData] = useState(null);
+  const [weatherData, setWeatherData] = useState<any>(null);
   const [location, setLocation] = useState("");
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
 
   const handleFetchWeather = async (location: string) => {
     const data = await fetchWeather(location);

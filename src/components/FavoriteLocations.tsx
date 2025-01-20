@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import React, { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 interface FavoriteLocationsProps {
   onLocationClick: (location: string) => void;
@@ -9,8 +9,7 @@ const FavoriteLocations: React.FC<FavoriteLocationsProps> = ({
   onLocationClick,
 }) => {
   const [newLocation, setNewLocation] = useState("");
-  const { user, favorites, addFavorite, removeFavorite } =
-    useContext(AuthContext);
+  const { user, favorites, addFavorite, removeFavorite } = useAuth();
 
   if (!user) {
     return null; // Ensure the component does not render if the user is not logged in
