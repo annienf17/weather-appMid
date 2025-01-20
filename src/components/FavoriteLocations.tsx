@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import React, { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 import "./FavoriteLocations.css"; // Import the CSS file
 
 interface FavoriteLocationsProps {
@@ -10,8 +10,7 @@ const FavoriteLocations: React.FC<FavoriteLocationsProps> = ({
   onLocationClick,
 }) => {
   const [newLocation, setNewLocation] = useState("");
-  const { user, favorites, addFavorite, removeFavorite } =
-    useContext(AuthContext);
+  const { user, favorites, addFavorite, removeFavorite } = useAuth();
 
   if (!user) {
     return null; // Ensure the component does not render if the user is not logged in
@@ -35,7 +34,7 @@ const FavoriteLocations: React.FC<FavoriteLocationsProps> = ({
           value={newLocation}
           onChange={(e) => setNewLocation(e.target.value)}
           placeholder="Add new location"
-          className="favorite-input"
+          className="favorite-input common-input"
         />
         <button onClick={handleAddFavorite} className="favorite-button">
           Add
