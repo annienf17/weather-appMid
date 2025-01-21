@@ -14,7 +14,28 @@ import {
   faSmog,
   faBolt,
 } from "@fortawesome/free-solid-svg-icons";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import "../App.css"; // Import the CSS file
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 export interface WeatherData {
   currentWeather: {
@@ -120,23 +141,81 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ data }) => {
     }
   };
 
-  // Filter the data to get 1 forecast per day for 3 days
+  // Filter the data to get 1 forecast per day for 7 days
   const filteredForecasts = data.forecast.list
     .filter((_, index) => index % 8 === 0)
-    .slice(0, 3);
+    .slice(0, 7);
+
+  // Prepare data for charts
+  const chartData = {
+    labels: filteredForecasts.map((forecast) =>
+      formatDate(forecast.dt, data.forecast.city.timezone)
+    ),
+    datasets: [
+      {
+        label: "Temperature",
+        data: filteredForecasts.map((forecast) =>
+          convertTemperature(forecast.main.temp)
+        ),
+        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 99, 132, 0.2)",
+      },
+      {
+        label: "Humidity",
+        data: filteredForecasts.map((forecast) => forecast.main.humidity),
+        borderColor: "rgba(54, 162, 235, 1)",
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+      },
+      {
+        label: "Pressure",
+        data: filteredForecasts.map((forecast) => forecast.main.pressure),
+        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+      },
+    ],
+  };
+
+  // Chart options to change text color to white
+  const chartOptions = {
+    scales: {
+      x: {
+        ticks: {
+          color: "white",
+        },
+      },
+      y: {
+        ticks: {
+          color: "white",
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: "white",
+        },
+      },
+      title: {
+        display: true,
+        text: "5-Day Weather Forecast",
+        color: "white",
+      },
+    },
+  };
 
   return (
     <div>
       <h2>Weather in {data.currentWeather.name}</h2>
       <button onClick={() => setShowForecast(!showForecast)}>
-        {showForecast ? "Show Current Weather" : "Show 3-Day Forecast"}
+        {showForecast ? "Show Current Weather" : "Show 5-Day Forecast"}
       </button>
       <button onClick={toggleTemperatureUnit}>
         Switch to {isCelsius ? "Fahrenheit" : "Celsius"}
       </button>
       {showForecast ? (
         <div>
-          <h3>3-Day Forecast</h3>
+          <h3>5-Day Forecast</h3>
+          <Line data={chartData} options={chartOptions} />
           <ul>
             {filteredForecasts.map((forecast, index) => (
               <li key={index}>
