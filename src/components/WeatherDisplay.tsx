@@ -1,4 +1,20 @@
 import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTemperatureHigh,
+  faTint,
+  faWind,
+  faCloud,
+  faEye,
+  faTachometerAlt,
+  faSun,
+  faCloudSun,
+  faCloudRain,
+  faSnowflake,
+  faSmog,
+  faBolt,
+} from "@fortawesome/free-solid-svg-icons";
+import "../App.css"; // Import the CSS file
 
 export interface WeatherData {
   currentWeather: {
@@ -81,10 +97,33 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ data }) => {
 
   const temperatureUnit = isCelsius ? "°C" : "°F";
 
-  // Filter the data to get 3 forecasts per day for 3 days
+  const getConditionIcon = (description: string) => {
+    switch (description.toLowerCase()) {
+      case "clear sky":
+        return faSun;
+      case "few clouds":
+        return faCloudSun;
+      case "scattered clouds":
+      case "broken clouds":
+        return faCloud;
+      case "shower rain":
+      case "rain":
+        return faCloudRain;
+      case "thunderstorm":
+        return faBolt;
+      case "snow":
+        return faSnowflake;
+      case "mist":
+        return faSmog;
+      default:
+        return faCloud;
+    }
+  };
+
+  // Filter the data to get 1 forecast per day for 3 days
   const filteredForecasts = data.forecast.list
     .filter((_, index) => index % 8 === 0)
-    .slice(0, 9);
+    .slice(0, 3);
 
   return (
     <div>
@@ -101,32 +140,58 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ data }) => {
           <ul>
             {filteredForecasts.map((forecast, index) => (
               <li key={index}>
-                <p>
-                  Date: {formatDate(forecast.dt, data.forecast.city.timezone)}
+                <p className="date">
+                  <strong>Date:</strong>{" "}
+                  {formatDate(forecast.dt, data.forecast.city.timezone)}
                 </p>
                 <p>
                   Time: {formatTime(forecast.dt, data.forecast.city.timezone)}
                 </p>
                 <p>
+                  <FontAwesomeIcon icon={faTemperatureHigh} className="icon" />{" "}
                   Temperature:{" "}
                   {Math.round(convertTemperature(forecast.main.temp))}
                   {temperatureUnit}
                 </p>
-                <p>Condition: {forecast.weather[0].description}</p>
-                <p>Humidity: {forecast.main.humidity}%</p>
-                <p>Pressure: {forecast.main.pressure} hPa</p>
-                <p>Wind Speed: {forecast.wind.speed} m/s</p>
-                <p>Wind Direction: {forecast.wind.deg}°</p>
-                <p>Cloudiness: {forecast.clouds.all}%</p>
-                <p>Visibility: {forecast.visibility} meters</p>
+                <p>
+                  <FontAwesomeIcon icon={faTint} className="icon" /> Humidity:{" "}
+                  {forecast.main.humidity}%
+                </p>
+                <p>
+                  <FontAwesomeIcon icon={faTachometerAlt} className="icon" />{" "}
+                  Pressure: {forecast.main.pressure} hPa
+                </p>
+                <p>
+                  <FontAwesomeIcon icon={faWind} className="icon" /> Wind Speed:{" "}
+                  {forecast.wind.speed} m/s
+                </p>
+                <p>
+                  <FontAwesomeIcon icon={faWind} className="icon" /> Wind
+                  Direction: {forecast.wind.deg}°
+                </p>
+                <p>
+                  <FontAwesomeIcon icon={faCloud} className="icon" />{" "}
+                  Cloudiness: {forecast.clouds.all}%
+                </p>
+                <p>
+                  <FontAwesomeIcon icon={faEye} className="icon" /> Visibility:{" "}
+                  {forecast.visibility} meters
+                </p>
+                <p>
+                  <FontAwesomeIcon
+                    icon={getConditionIcon(forecast.weather[0].description)}
+                    className="icon"
+                  />{" "}
+                  Condition: {forecast.weather[0].description}
+                </p>
               </li>
             ))}
           </ul>
         </div>
       ) : (
         <div>
-          <p>
-            Date:{" "}
+          <p className="date">
+            <strong>Date:</strong>{" "}
             {formatDate(data.currentWeather.dt, data.currentWeather.timezone)}
           </p>
           <p>
@@ -134,17 +199,44 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ data }) => {
             {formatTime(data.currentWeather.dt, data.currentWeather.timezone)}
           </p>
           <p>
+            <FontAwesomeIcon icon={faTemperatureHigh} className="icon" />{" "}
             Temperature:{" "}
             {Math.round(convertTemperature(data.currentWeather.main.temp))}
             {temperatureUnit}
           </p>
-          <p>Condition: {data.currentWeather.weather[0].description}</p>
-          <p>Humidity: {data.currentWeather.main.humidity}%</p>
-          <p>Pressure: {data.currentWeather.main.pressure} hPa</p>
-          <p>Wind Speed: {data.currentWeather.wind.speed} m/s</p>
-          <p>Wind Direction: {data.currentWeather.wind.deg}°</p>
-          <p>Cloudiness: {data.currentWeather.clouds.all}%</p>
-          <p>Visibility: {data.currentWeather.visibility} meters</p>
+          <p>
+            <FontAwesomeIcon icon={faTint} className="icon" /> Humidity:{" "}
+            {data.currentWeather.main.humidity}%
+          </p>
+          <p>
+            <FontAwesomeIcon icon={faTachometerAlt} className="icon" />{" "}
+            Pressure: {data.currentWeather.main.pressure} hPa
+          </p>
+          <p>
+            <FontAwesomeIcon icon={faWind} className="icon" /> Wind Speed:{" "}
+            {data.currentWeather.wind.speed} m/s
+          </p>
+          <p>
+            <FontAwesomeIcon icon={faWind} className="icon" /> Wind Direction:{" "}
+            {data.currentWeather.wind.deg}°
+          </p>
+          <p>
+            <FontAwesomeIcon icon={faCloud} className="icon" /> Cloudiness:{" "}
+            {data.currentWeather.clouds.all}%
+          </p>
+          <p>
+            <FontAwesomeIcon icon={faEye} className="icon" /> Visibility:{" "}
+            {data.currentWeather.visibility} meters
+          </p>
+          <p>
+            <FontAwesomeIcon
+              icon={getConditionIcon(
+                data.currentWeather.weather[0].description
+              )}
+              className="icon"
+            />{" "}
+            Condition: {data.currentWeather.weather[0].description}
+          </p>
         </div>
       )}
     </div>

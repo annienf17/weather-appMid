@@ -48,3 +48,14 @@ button {
 button:hover {
   background-color: #6a11cb; /* Hover state background color */
 }
+.date {
+  border-bottom: 2px solid rgb(180, 241, 250);
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.icon {
+  color: rgb(195, 243, 250);
+
+  width: 40px;
+}

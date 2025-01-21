@@ -27,7 +27,7 @@ const FavoriteLocations: React.FC<FavoriteLocationsProps> = ({
 
   return (
     <div>
-      <h3>{user}'s Favorite Locations</h3>
+      <h3>{user}'s Favourite Locations</h3>
       <div className="favorite-form">
         <input
           type="text"

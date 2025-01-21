@@ -32,6 +32,26 @@
   background-color: #2575fc; /* Hover state background color */
 }
 
+.suggestions-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.suggestions-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestions-list li:hover {
+  background-color: #f0f0f0;
+}
+
 .favorite-list {
   list-style-type: none;
   padding: 0;
