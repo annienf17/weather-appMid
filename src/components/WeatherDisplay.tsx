@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTemperatureHigh,
@@ -25,7 +25,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import "../App.css"; // Import the CSS file
+import { CSSTransition } from "react-transition-group";
+import "../App.css";
 
 ChartJS.register(
   CategoryScale,
@@ -97,6 +98,14 @@ interface WeatherDisplayProps {
 const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ data }) => {
   const [showForecast, setShowForecast] = useState(false);
   const [isCelsius, setIsCelsius] = useState(true);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate data loading
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
 
   const formatTime = (timestamp: number, timezone: number) => {
     const date = new Date((timestamp + timezone) * 1000);
@@ -203,6 +212,10 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ data }) => {
     },
   };
 
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
   return (
     <div>
       <h2>Weather in {data.currentWeather.name}</h2>
@@ -212,7 +225,12 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ data }) => {
       <button onClick={toggleTemperatureUnit}>
         Switch to {isCelsius ? "Fahrenheit" : "Celsius"}
       </button>
-      {showForecast ? (
+      <CSSTransition
+        in={showForecast}
+        timeout={300}
+        classNames="fade"
+        unmountOnExit
+      >
         <div>
           <h3>5-Day Forecast</h3>
           <Line data={chartData} options={chartOptions} />
@@ -267,7 +285,13 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ data }) => {
             ))}
           </ul>
         </div>
-      ) : (
+      </CSSTransition>
+      <CSSTransition
+        in={!showForecast}
+        timeout={300}
+        classNames="fade"
+        unmountOnExit
+      >
         <div>
           <p className="date">
             <strong>Date:</strong>{" "}
@@ -317,7 +341,7 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ data }) => {
             Condition: {data.currentWeather.weather[0].description}
           </p>
         </div>
-      )}
+      </CSSTransition>
     </div>
   );
 };
