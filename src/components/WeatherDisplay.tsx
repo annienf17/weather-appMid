@@ -25,7 +25,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { CSSTransition } from "react-transition-group";
 import "../App.css";
 
 ChartJS.register(
@@ -225,12 +224,7 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ data }) => {
       <button onClick={toggleTemperatureUnit}>
         Switch to {isCelsius ? "Fahrenheit" : "Celsius"}
       </button>
-      <CSSTransition
-        in={showForecast}
-        timeout={300}
-        classNames="fade"
-        unmountOnExit
-      >
+      {showForecast ? (
         <div>
           <h3>5-Day Forecast</h3>
           <Line data={chartData} options={chartOptions} />
@@ -285,13 +279,7 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ data }) => {
             ))}
           </ul>
         </div>
-      </CSSTransition>
-      <CSSTransition
-        in={!showForecast}
-        timeout={300}
-        classNames="fade"
-        unmountOnExit
-      >
+      ) : (
         <div>
           <p className="date">
             <strong>Date:</strong>{" "}
@@ -341,7 +329,7 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ data }) => {
             Condition: {data.currentWeather.weather[0].description}
           </p>
         </div>
-      </CSSTransition>
+      )}
     </div>
   );
 };
