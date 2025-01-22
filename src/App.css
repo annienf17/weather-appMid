@@ -54,6 +54,9 @@ button:hover {
   display: inline-block;
   padding-bottom: 5px;
 }
+.date span {
+  margin-left: 20px;
+}
 
 .icon {
   color: rgb(180, 241, 250);
